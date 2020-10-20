@@ -114,7 +114,7 @@ const Map = () => {
   
   const onChangeRating = (e) => setFormData({ ...formData, rating: e });
   const onChangeFilterRating = (e) => {
-    setFilterRating(e.target.value);
+        setFilterRating(e.target.value);
   };
   
   const onSubmitComment = (e) => {
@@ -343,7 +343,7 @@ const Map = () => {
         </div>
         {marks
           .filter((mark) =>
-            filterRating ? Math.floor(mark.rating) === filterRating : true
+            filterRating ? Math.floor(mark.rating) == filterRating : true
           )
           .map((mark, index) => {
             return (
