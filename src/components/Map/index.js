@@ -1,145 +1,156 @@
-import React, { useState } from "react";
-import GoogleMap from "google-map-react";
-import Mark from "../Mark";
-import Modal from "react-modal";
-import ReactStars from "react-stars";
+import React, { useState } from 'react'
+import GoogleMap from 'google-map-react'
+import Mark from '../Mark'
+import Modal from 'react-modal'
+import ReactStars from 'react-stars'
+import { useToasts } from 'react-toast-notifications'
 const Map = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [commentModalIsOpen, setCommentModalIsOpen] = useState(false);
-  const [filterRating, setFilterRating] = useState("");
-  const [currentRestaurant, setCurrentRestaurant] = useState("");
-  const [currentComment, setCurrentComment] = useState({username: "user1", commentBody: ""});
+  const [modalIsOpen, setIsOpen] = useState(false)
+  const [commentModalIsOpen, setCommentModalIsOpen] = useState(false)
+  const { addToast } = useToasts()
+  const [filterRating, setFilterRating] = useState('')
+  const [currentRestaurant, setCurrentRestaurant] = useState('')
+  const [currentComment, setCurrentComment] = useState({
+    username: 'user1',
+    commentBody: '',
+  })
   const [marks, setMarks] = useState([
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 33.8869,
       lng: 9.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 5,
       comments: [
         {
-          username: "user1",
+          username: 'user1',
           commentBody:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, totam.",
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, totam.',
         },
         {
-          username: "user2",
+          username: 'user2',
           commentBody:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, totam.",
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, totam.',
         },
       ],
     },
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 34.8869,
       lng: 15.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 5,
       comments: [],
     },
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 30.8869,
       lng: 5.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 2,
       comments: [],
     },
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 28.8869,
       lng: 9.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 5,
       comments: [],
     },
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 29.8869,
       lng: 9.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 3,
       comments: [],
     },
     {
-      name: "restau la3youni",
+      name: 'restau la3youni',
       lat: 20.8869,
       lng: 13.337844,
-      description: "description mta3 restau lena",
+      description: 'description mta3 restau lena',
       rating: 5,
       comments: [],
     },
-  ]);
+  ])
   const [formData, setFormData] = useState({
-    name: "",
+    name: '',
     lat: 0,
     lng: 0,
-    description: "",
-    rating: "",
-  });
-  const { name, lat, lng, description, rating } = formData;
+    description: '',
+    rating: '',
+  })
+  const { name, lat, lng, description, rating } = formData
   const customStyles = {
     content: {
-      width: "50%",
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "transparent",
+      width: '50%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: 'transparent',
     },
-  };
+  }
 
   function openModal() {
-    setIsOpen(true);
+    setIsOpen(true)
   }
   function closeModal() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
   function openCommentModal() {
-    setCommentModalIsOpen(true);
+    setCommentModalIsOpen(true)
   }
   function closeCommentModal() {
-    setCommentModalIsOpen(false);
-    setCurrentComment({ username: "user1", commentBody: "" });
+    setCommentModalIsOpen(false)
+    setCurrentComment({ username: 'user1', commentBody: '' })
   }
   const onChangeComment = (e) => {
-    
-    setCurrentComment({ ...currentComment, [e.target.name]: e.target.value });
-    console.log(currentComment);
+    setCurrentComment({ ...currentComment, [e.target.name]: e.target.value })
+    console.log(currentComment)
   }
 
   const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-  const onChangeRating = (e) => setFormData({ ...formData, rating: e });
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+
+  const onChangeRating = (e) => setFormData({ ...formData, rating: e })
   const onChangeFilterRating = (e) => {
-        setFilterRating(e.target.value);
-  };
-  
+    setFilterRating(e.target.value)
+  }
+
   const onSubmitComment = (e) => {
-    e.preventDefault();
-    const newMarks = marks;
-    newMarks[currentRestaurant].comments.push(currentComment);
+    e.preventDefault()
+    const newMarks = marks
+    newMarks[currentRestaurant].comments.push(currentComment)
     setMarks(newMarks)
-    setCurrentComment({ username: "user1", commentBody: "" });
+    setCurrentComment({ username: 'user1', commentBody: '' })
   }
   const onSubmit = (e) => {
-    e.preventDefault();
-    const newMarks = [...marks, { ...formData }];
-    setMarks(newMarks);
-    setFormData("");
-    closeModal();
-  };
+    e.preventDefault()
+    const newMarks = [...marks, { ...formData }]
+    setMarks(newMarks)
+    setFormData('')
+    closeModal()
+  }
   return (
-    <div style={{ overflowX: "hidden", display: "flex" }}>
-      <div style={{ height: "100vh", width: "75%", overflowX: "hidden" }}>
+    <div style={{ overflowX: 'hidden', display: 'flex' }}>
+      <div style={{ height: '100vh', width: '75%', overflowX: 'hidden' }}>
         <GoogleMap
+          onClick={({ x, y, lat, lng, event }) =>
+            addToast('Lat: ' + lat + ' ,Lng: ' + lng, {
+              appearance: 'success',
+              autoDismiss: false,
+            })
+          }
           bootstrapURLKeys={{
-            key: "AIzaSyDfcXOKPj2FBy-hE5Z1Npf_NWYap6e5xAA",
+            key: 'AIzaSyDfcXOKPj2FBy-hE5Z1Npf_NWYap6e5xAA',
           }}
           defaultCenter={{ lat: 33.8869, lng: 9.5375 }}
-          defaultZoom={10}>
+          defaultZoom={10}
+        >
           {marks.map((mark, index) => {
             return (
               <Mark
@@ -147,13 +158,14 @@ const Map = () => {
                 name={mark.name}
                 description={mark.description}
                 lat={mark.lat}
-                lng={mark.lng}></Mark>
-            );
+                lng={mark.lng}
+              ></Mark>
+            )
           })}
         </GoogleMap>
       </div>
-      <div style={{ height: "100vh", width: "25%", paddingLeft: "2rem" }}>
-        <div style={{ paddingBottom: "2rem", paddingTop: "2rem" }}>
+      <div style={{ height: '100vh', width: '25%', paddingLeft: '2rem' }}>
+        <div style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
           <div class="row">
             <div class="col">
               <button onClick={openModal} className="btn btn-primary">
@@ -163,7 +175,8 @@ const Map = () => {
             <div class="col">
               <select
                 onChange={(e) => onChangeFilterRating(e)}
-                class="custom-select">
+                class="custom-select"
+              >
                 <option value="">Choose Rating</option>
                 <option value="1">★</option>
                 <option value="2">★★</option>
@@ -176,7 +189,8 @@ const Map = () => {
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
-            style={customStyles}>
+            style={customStyles}
+          >
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -186,7 +200,8 @@ const Map = () => {
                     type="button"
                     class="close"
                     data-dismiss="modal"
-                    aria-label="Close">
+                    aria-label="Close"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -243,7 +258,7 @@ const Map = () => {
                         name="rating"
                         count={5}
                         size={48}
-                        color2={"#ffd700"}
+                        color2={'#ffd700'}
                         value={rating}
                         onChange={(e) => onChangeRating(e)}
                       />
@@ -257,7 +272,8 @@ const Map = () => {
                   <button
                     type="button"
                     class="btn btn-secondary"
-                    data-dismiss="modal">
+                    data-dismiss="modal"
+                  >
                     Close
                   </button>
                 </div>
@@ -267,7 +283,8 @@ const Map = () => {
           <Modal
             isOpen={commentModalIsOpen}
             onRequestClose={closeModal}
-            style={customStyles}>
+            style={customStyles}
+          >
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -277,15 +294,17 @@ const Map = () => {
                     type="button"
                     class="close"
                     data-dismiss="modal"
-                    aria-label="Close">
+                    aria-label="Close"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div
                   style={{
-                    borderBottom: "1px solid #dee2e6",
-                    padding: "1rem 1rem",
-                  }}>
+                    borderBottom: '1px solid #dee2e6',
+                    padding: '1rem 1rem',
+                  }}
+                >
                   {marks[currentRestaurant] &&
                     marks[currentRestaurant].comments &&
                     marks[currentRestaurant].comments.map((comment, i) => {
@@ -297,17 +316,19 @@ const Map = () => {
                             viewBox="0 0 16 16"
                             class="bi bi-person-fill"
                             fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg">
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
                             <path
                               fill-rule="evenodd"
-                              d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                              d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                            ></path>
                           </svg>
                           <div class="media-body">
                             <h6 class="mt-0">{comment.username}</h6>
                             {comment.commentBody}
                           </div>
                         </div>
-                      );
+                      )
                     })}
                 </div>
                 <div class="modal-body">
@@ -333,7 +354,8 @@ const Map = () => {
                     onClick={closeCommentModal}
                     type="button"
                     class="btn btn-secondary"
-                    data-dismiss="modal">
+                    data-dismiss="modal"
+                  >
                     Close
                   </button>
                 </div>
@@ -343,7 +365,7 @@ const Map = () => {
         </div>
         {marks
           .filter((mark) =>
-            filterRating ? Math.floor(mark.rating) == filterRating : true
+            filterRating ? Math.floor(mark.rating) == filterRating : true,
           )
           .map((mark, index) => {
             return (
@@ -365,30 +387,33 @@ const Map = () => {
                   <span> </span>
                   <button
                     onClick={() => {
-                      openCommentModal();
-                      setCurrentRestaurant(index);
+                      openCommentModal()
+                      setCurrentRestaurant(index)
                     }}
                     type="button"
-                    class="btn btn-outline-primary">
+                    class="btn btn-outline-primary"
+                  >
                     <svg
                       width="1em"
                       height="1em"
                       viewBox="0 0 16 16"
                       class="bi bi-chat-left-dots-fill"
                       fill="currentColor"
-                      xmlns="http://www.w3.org/2000/svg">
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <path
                         fill-rule="evenodd"
-                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+                      ></path>
                     </svg>
                   </button>
                 </p>
               </div>
-            );
+            )
           })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Map;
+export default Map
