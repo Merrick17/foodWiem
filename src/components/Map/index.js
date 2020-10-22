@@ -135,16 +135,27 @@ const Map = () => {
     setFormData('')
     closeModal()
   }
+  const addNewMarker = () => {}
   return (
     <div style={{ overflowX: 'hidden', display: 'flex' }}>
       <div style={{ height: '100vh', width: '75%', overflowX: 'hidden' }}>
         <GoogleMap
-          onClick={({ x, y, lat, lng, event }) =>
+          onClick={({ x, y, lat, lng, event }) => {
             addToast('Lat: ' + lat + ' ,Lng: ' + lng, {
               appearance: 'success',
               autoDismiss: false,
             })
-          }
+            let markerData = {
+              name: '',
+              lat: lat,
+              lng: lng,
+              description: '',
+              rating: 0,
+              comments: [],
+            }
+            const newMarks = [...marks, { ...markerData }]
+            setMarks(newMarks)
+          }}
           bootstrapURLKeys={{
             key: 'AIzaSyDfcXOKPj2FBy-hE5Z1Npf_NWYap6e5xAA',
           }}
