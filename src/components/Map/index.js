@@ -2,7 +2,8 @@ import GoogleMap from 'google-map-react'
 import Mark from '../Mark'
 import Modal from 'react-modal'
 import ReactStars from 'react-stars'
-import { useToasts } from 'react-toast-notifications'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 // const Map = () => {
 //   const [modalIsOpen, setIsOpen] = useState(false)
 //   const [commentModalIsOpen, setCommentModalIsOpen] = useState(false)
@@ -594,6 +595,7 @@ export default class Map extends Component {
         rating: '',
       },
     }
+
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
     this.onChangeFilterRating = this.onChangeFilterRating.bind(this)
@@ -603,6 +605,33 @@ export default class Map extends Component {
     this.onSubmitComment = this.onSubmitComment.bind(this)
     this.onChangeComment = this.onChangeComment.bind(this)
     this.onChangeRating = this.onChangeRating.bind(this)
+    this.getData = this.getData.bind(this)
+  }
+  componentDidMount() {
+    Modal.setAppElement(document.getElementById('root'))
+    this.getData()
+  }
+
+  getData() {
+    axios
+      .get(`https://developers.zomato.com/api/v2.1/locations?query='h'`, {
+        headers: { 'user-key': '721d935701c3e7feace43a43331e3049' },
+      })
+      .then((res) => {
+        const rest = res.data.location_suggestions[0]
+        console.log(rest)
+        let pl = {
+          name: rest.title,
+          lat: rest.latitude,
+          lng: rest.longitude,
+          description: '',
+          rating: '',
+        }
+
+        this.setState({
+          marks: [...this.state.marks, pl],
+        })
+      })
   }
   onChangeRating = (e) => {
     this.setState({
@@ -663,12 +692,22 @@ export default class Map extends Component {
     newMarks[this.state.currentRestaurant].comments.push(
       this.state.currentComment,
     )
+
+    this.setState({
+      marks: newMarks,
+      formData: '',
+    })
     // setMarks(newMarks)
     // setCurrentComment({ username: 'user1', commentBody: '' })
   }
   onSubmit = (e) => {
     e.preventDefault()
     const newMarks = [...this.state.marks, { ...this.state.formData }]
+    this.setState({
+      marks: newMarks,
+      formData: '',
+    })
+    console.log(this.state.marks)
     // setMarks(newMarks)
     // setFormData('')
     this.closeModal()
@@ -679,10 +718,7 @@ export default class Map extends Component {
         <div style={{ height: '100vh', width: '75%', overflowX: 'hidden' }}>
           <GoogleMap
             onClick={({ x, y, lat, lng, event }) => {
-              // addToast('Lat: ' + lat + ' ,Lng: ' + lng, {
-              //   appearance: 'success',
-              //   autoDismiss: false,
-              // })
+              Swal.fire('Lat: ' + lat + ' ,Lng: ' + lng)
               let markerData = {
                 name: '',
                 lat: lat,
@@ -692,6 +728,10 @@ export default class Map extends Component {
                 comments: [],
               }
               const newMarks = [...this.state.marks, { ...markerData }]
+              this.setState({
+                marks: newMarks,
+                formData: '',
+              })
               //setMarks(newMarks)
             }}
             bootstrapURLKeys={{
@@ -739,6 +779,7 @@ export default class Map extends Component {
               isOpen={this.state.modalIsOpen}
               onRequestClose={this.closeModal}
               style={this.customStyles}
+              appElement={document.getElementById('app')}
             >
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -833,6 +874,7 @@ export default class Map extends Component {
               isOpen={this.state.commentModalIsOpen}
               onRequestClose={this.state.closeModal}
               style={this.customStyles}
+              appElement={document.getElementById('app')}
             >
               <div class="modal-dialog">
                 <div class="modal-content">
