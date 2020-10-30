@@ -63,19 +63,20 @@ export default class Map extends Component {
         headers: { 'user-key': '721d935701c3e7feace43a43331e3049' },
       })
       .then((res) => {
-        const rest = res.data.location_suggestions[0]
-        console.log(rest)
-        let pl = {
-          name: rest.title,
-          lat: rest.latitude,
-          lng: rest.longitude,
-          description: '',
-          rating: '',
-        }
+        res.data.location_suggestions.forEach((elm) => {
+          let pl = {
+            name: elm.title,
+            lat: elm.latitude,
+            lng: elm.longitude,
+            description: '',
+            rating: '',
+          }
 
-        this.setState({
-          marks: [...this.state.marks, pl],
+          this.setState({
+            marks: [...this.state.marks, pl],
+          })
         })
+        console.log(rest)
       })
   }
   onChangeRating = (e) => {
