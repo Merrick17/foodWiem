@@ -35,6 +35,10 @@ export default class Map extends Component {
         description: '',
         rating: '',
       },
+      userlocation: {
+        lat: '',
+        lng: '',
+      },
     }
 
     this.openModal = this.openModal.bind(this)
@@ -55,6 +59,15 @@ export default class Map extends Component {
     //console.log('Daaataaa', resto.resto)
     this.setState({
       marks: resto.resto,
+    })
+    navigator.geolocation.getCurrentPosition((position) => {
+      //console.log(position.coords.la)
+      this.setState({
+        userlocation: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+      })
     })
   }
 
@@ -192,8 +205,11 @@ export default class Map extends Component {
             bootstrapURLKeys={{
               key: 'AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY',
             }}
-            defaultCenter={{ lat: 33.8869, lng: 9.5375 }}
-            defaultZoom={10}
+            defaultCenter={{
+              lat: this.state.userlocation.lat,
+              lng: this.state.userlocation.lng,
+            }}
+            defaultZoom={15}
           >
             {this.state.marks.map((mark, index) => {
               return (
@@ -438,6 +454,9 @@ export default class Map extends Component {
                     Longitude: {mark.lng}
                     <span> </span>
                     Rating: {mark.rating}
+                    <span> </span>
+                    <br></br>
+                    Adresse: {mark.adresse}
                     <span> </span>
                     <button
                       onClick={() => {

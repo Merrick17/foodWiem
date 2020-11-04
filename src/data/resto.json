@@ -6,6 +6,7 @@
       "lng": 9.337844,
       "description": "description mta3 restau lena",
       "rating": 5,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": [
         {
           "username": "user1",
@@ -23,6 +24,7 @@
       "lng": 15.337844,
       "description": "description mta3 restau lena",
       "rating": 5,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": []
     },
     {
@@ -31,6 +33,7 @@
       "lng": 5.337844,
       "description": "description mta3 restau lena",
       "rating": 2,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": []
     },
     {
@@ -39,6 +42,7 @@
       "lng": 9.337844,
       "description": "description mta3 restau lena",
       "rating": 5,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": []
     },
     {
@@ -47,6 +51,7 @@
       "lng": 9.337844,
       "description": "description mta3 restau lena",
       "rating": 3,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": []
     },
     {
@@ -55,6 +60,7 @@
       "lng": 13.337844,
       "description": "description mta3 restau lena",
       "rating": 5,
+      "adresse": "Boulevard Dr Taieb Hachicha, M'saken",
       "comments": []
     }
   ]
