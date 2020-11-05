@@ -79,7 +79,7 @@ export default class Map extends Component {
   getData() {
     axios
       .get(
-        `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=6.5088,3.3137&radius=2000&type=restaurant&key=AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY`,
+        `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.userlocation.lat},${this.state.userlocation.lng}&radius=2000&type=restaurant&key=AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY`,
         {},
       )
       .then((res) => {
@@ -209,7 +209,7 @@ export default class Map extends Component {
               lat: this.state.userlocation.lat,
               lng: this.state.userlocation.lng,
             }}
-            defaultZoom={15}
+            defaultZoom={10}
           >
             {this.state.marks.map((mark, index) => {
               return (
