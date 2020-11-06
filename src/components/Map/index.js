@@ -1,69 +1,69 @@
-import GoogleMap from "google-map-react";
-import Mark from "../Mark";
-import Modal from "react-modal";
-import ReactStars from "react-stars";
-import axios from "axios";
-import Swal from "sweetalert2";
+import GoogleMap from 'google-map-react'
+import Mark from '../Mark'
+import Modal from 'react-modal'
+import ReactStars from 'react-stars'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
-import React, { Component } from "react";
-import resto from "../../data/resto.json";
+import React, { Component } from 'react'
+import resto from '../../data/resto.json'
 export default class Map extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.customStyles = {
       content: {
-        width: "50%",
-        top: "50%",
-        left: "50%",
-        right: "auto",
-        bottom: "auto",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "transparent",
+        width: '50%',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'transparent',
       },
-    };
+    }
     this.state = {
       modalIsOpen: false,
       commentModalIsOpen: false,
-      filterRating: "",
-      currentRestaurant: "",
-      currentComment: "",
+      filterRating: '',
+      currentRestaurant: '',
+      currentComment: '',
       marks: [],
       formData: {
-        name: "",
+        name: '',
         lat: 0,
         lng: 0,
-        description: "",
-        rating: "",
+        description: '',
+        rating: '',
       },
       userlocation: {
-        lat: "",
-        lng: "",
+        lat: '',
+        lng: '',
       },
       defaultPosition: {
         lat: 33.8869,
         lng: 9.5375,
       },
-    };
+    }
 
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.onChangeFilterRating = this.onChangeFilterRating.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.openCommentModal = this.openCommentModal.bind(this);
-    this.closeCommentModal = this.closeCommentModal.bind(this);
-    this.onSubmitComment = this.onSubmitComment.bind(this);
-    this.onChangeComment = this.onChangeComment.bind(this);
-    this.onChangeRating = this.onChangeRating.bind(this);
-    this.getData = this.getData.bind(this);
-    this.setCurrentRestaurant = this.setCurrentRestaurant.bind(this);
+    this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.onChangeFilterRating = this.onChangeFilterRating.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+    this.openCommentModal = this.openCommentModal.bind(this)
+    this.closeCommentModal = this.closeCommentModal.bind(this)
+    this.onSubmitComment = this.onSubmitComment.bind(this)
+    this.onChangeComment = this.onChangeComment.bind(this)
+    this.onChangeRating = this.onChangeRating.bind(this)
+    this.getData = this.getData.bind(this)
+    this.setCurrentRestaurant = this.setCurrentRestaurant.bind(this)
   }
   componentDidMount() {
-    Modal.setAppElement(document.getElementById("root"));
-    this.getData();
+    Modal.setAppElement(document.getElementById('root'))
+    this.getData()
     //console.log('Daaataaa', resto.resto)
     this.setState({
       marks: resto.resto,
-    });
+    })
     navigator.geolocation.getCurrentPosition((position) => {
       //console.log(position.coords.la)
       this.setState({
@@ -71,75 +71,75 @@ export default class Map extends Component {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         },
-      });
-    });
+      })
+    })
   }
 
   setCurrentRestaurant(ind) {
     this.setState({
       currentRestaurant: ind,
-    });
+    })
   }
   getData() {
     axios
       .get(
         `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.userlocation.lat},${this.state.userlocation.lng}&radius=2000&type=restaurant&key=AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY`,
-        {}
+        {},
       )
       .then((res) => {
-        let data = res.data.results;
+        let data = res.data.results
         let newData = data.map((elm) => {
-          console.log(elm);
+          console.log(elm)
           return {
             name: elm.name,
             lat: elm.geometry.location.lat,
             lng: elm.geometry.location.lng,
-            description: "",
+            description: '',
             rating: 0,
             comments: [],
-          };
-        });
+          }
+        })
         this.setState({
           marks: [...this.state.marks, newData],
-        });
-        console.log("State", this.state.marks);
-      });
+        })
+        console.log('State', this.state.marks)
+      })
   }
   onChangeRating = (e) => {
     this.setState({
       formData: { ...this.state.formData, rating: e },
-    });
-  };
+    })
+  }
   onChangeFilterRating = (e) => {
     //     setFilterRating(e.target.value)
     this.setState({
       filterRating: e.target.value,
-    });
-  };
+    })
+  }
   openModal() {
     this.setState({
       modalIsOpen: true,
-    });
+    })
   }
   closeModal() {
     this.setState({
       modalIsOpen: false,
-    });
+    })
   }
   openCommentModal() {
     //setCommentModalIsOpen(true)
     this.setState({
       commentModalIsOpen: true,
-    });
+    })
   }
   closeCommentModal() {
     //setCommentModalIsOpen(false)
     // setCurrentComment({ username: 'user1', commentBody: '' })
     this.setState({
       commentModalIsOpen: false,
-      username: "user1",
-      commentBody: "",
-    });
+      username: 'user1',
+      commentBody: '',
+    })
   }
   onChangeComment = (e) => {
     this.setState({
@@ -147,67 +147,67 @@ export default class Map extends Component {
         ...this.state.currentComment,
         [e.target.name]: e.target.value,
       },
-    });
+    })
     //setCurrentComment({ ...currentComment, [e.target.name]: e.target.value })
     // console.log(currentComment)
-  };
+  }
 
   onChange = (e) =>
     //setFormData({ ...formData, [e.target.name]: e.target.value })
     //onChangeRating = (e) => setFormData({ ...formData, rating: e })
     (this.onChangeFilterRating = (e) => {
       //setFilterRating(e.target.value)
-    });
+    })
   onSubmitComment = (e) => {
-    e.preventDefault();
-    const newMarks = this.state.marks;
+    e.preventDefault()
+    const newMarks = this.state.marks
     newMarks[this.state.currentRestaurant].comments.push(
-      this.state.currentComment
-    );
+      this.state.currentComment,
+    )
 
     this.setState({
       marks: newMarks,
-      formData: "",
-    });
+      formData: '',
+    })
     // setMarks(newMarks)
     // setCurrentComment({ username: 'user1', commentBody: '' })
-  };
+  }
   onSubmit = (e) => {
-    e.preventDefault();
-    const newMarks = [...this.state.marks, { ...this.state.formData }];
+    e.preventDefault()
+    const newMarks = [...this.state.marks, { ...this.state.formData }]
     this.setState({
       marks: newMarks,
-      formData: "",
-    });
-    console.log(this.state.marks);
+      formData: '',
+    })
+    console.log(this.state.marks)
     // setMarks(newMarks)
     // setFormData('')
-    this.closeModal();
-  };
+    this.closeModal()
+  }
   render() {
     return (
-      <div style={{ overflowX: "hidden", display: "flex" }}>
-        <div style={{ height: "100vh", width: "75%", overflowX: "hidden" }}>
+      <div style={{ overflowX: 'hidden', display: 'flex' }}>
+        <div style={{ height: '100vh', width: '75%', overflowX: 'hidden' }}>
           <GoogleMap
             onClick={({ x, y, lat, lng, event }) => {
-              Swal.fire("Lat: " + lat + " ,Lng: " + lng);
+              Swal.fire('Lat: ' + lat + ' ,Lng: ' + lng)
               let markerData = {
-                name: "",
+                name: '',
                 lat: lat,
                 lng: lng,
-                description: "",
+                description: '',
                 rating: 0,
                 comments: [],
-              };
-              const newMarks = [...this.state.marks, { ...markerData }];
+              }
+              const newMarks = [...this.state.marks, { ...markerData }]
               this.setState({
                 marks: newMarks,
-                formData: "",
-              });
+                formData: '',
+              })
               //setMarks(newMarks)
             }}
             bootstrapURLKeys={{
-              key: "AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY",
+              key: 'AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY',
             }}
             defaultCenter={{ lat: 33.8869, lng: 9.5375 }}
             defaultZoom={10}
@@ -221,14 +221,14 @@ export default class Map extends Component {
                   lat={mark.lat}
                   lng={mark.lng}
                 ></Mark>
-              );
+              )
             })}
           </GoogleMap>
         </div>
-        <div style={{ height: "100vh", width: "25%", paddingLeft: "2rem" }}>
-          <div style={{ paddingBottom: "2rem", paddingTop: "2rem" }}>
-            <div class="row">
-              <div class="col">
+        <div style={{ height: '100vh', width: '25%', paddingLeft: '2rem' }}>
+          <div style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+            <div className="row">
+              <div className="col">
                 <button onClick={this.openModal} className="btn btn-primary">
                   Add restaurant
                 </button>
@@ -241,17 +241,17 @@ export default class Map extends Component {
                         lat: this.state.userlocation.lat,
                         lng: this.state.userlocation.lng,
                       },
-                    });
+                    })
                   }}
                   className="btn btn-primary"
                 >
-                 Go to my position
+                  Go to my position
                 </button>
               </div>
-              <div class="col">
+              <div className="col">
                 <select
                   onChange={(e) => this.onChangeFilterRating(e)}
-                  class="custom-select"
+                  className="custom-select"
                 >
                   <option value="">Choose Rating</option>
                   <option value="1">★</option>
@@ -266,28 +266,28 @@ export default class Map extends Component {
               isOpen={this.state.modalIsOpen}
               onRequestClose={this.closeModal}
               style={this.customStyles}
-              appElement={document.getElementById("app")}
+              appElement={document.getElementById('app')}
             >
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Add Restaurant</h5>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Add Restaurant</h5>
                     <button
                       onClick={this.closeModal}
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                     >
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">
+                  <div className="modal-body">
                     <form onSubmit={(e) => this.onSubmit(e)}>
-                      <div class="form-group">
+                      <div className="form-group">
                         <input
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="name"
                           name="name"
                           placeholder="Restaurant Name"
@@ -295,10 +295,10 @@ export default class Map extends Component {
                           onChange={(e) => this.onChange(e)}
                         />
                       </div>
-                      <div class="form-group">
+                      <div className="form-group">
                         <input
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="description"
                           name="description"
                           placeholder="Description"
@@ -306,11 +306,11 @@ export default class Map extends Component {
                           onChange={(e) => this.onChange(e)}
                         />
                       </div>
-                      <div class="row">
-                        <div class="col">
+                      <div className="row">
+                        <div className="col">
                           <input
                             type="number"
-                            class="form-control"
+                            className="form-control"
                             placeholder="Latitude"
                             id="lat"
                             name="lat"
@@ -318,10 +318,10 @@ export default class Map extends Component {
                             onChange={(e) => this.onChange(e)}
                           />
                         </div>
-                        <div class="col">
+                        <div className="col">
                           <input
                             type="number"
-                            class="form-control"
+                            className="form-control"
                             placeholder="Longitude"
                             id="lng"
                             name="lng"
@@ -330,12 +330,12 @@ export default class Map extends Component {
                           />
                         </div>
                       </div>
-                      <div class="form-group">
+                      <div className="form-group">
                         <ReactStars
                           name="rating"
                           count={5}
                           size={48}
-                          color2={"#ffd700"}
+                          color2={'#ffd700'}
                           value={this.state.rating}
                           onChange={(e) => this.onChangeRating(e)}
                         />
@@ -345,10 +345,10 @@ export default class Map extends Component {
                       </button>
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div className="modal-footer">
                     <button
                       type="button"
-                      class="btn btn-secondary"
+                      className="btn btn-secondary"
                       data-dismiss="modal"
                     >
                       Close
@@ -361,16 +361,16 @@ export default class Map extends Component {
               isOpen={this.state.commentModalIsOpen}
               onRequestClose={this.state.closeModal}
               style={this.customStyles}
-              appElement={document.getElementById("app")}
+              appElement={document.getElementById('app')}
             >
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Comment Section</h5>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Comment Section</h5>
                     <button
                       onClick={this.closeCommentModal}
                       type="button"
-                      class="close"
+                      className="close"
                       data-dismiss="modal"
                       aria-label="Close"
                     >
@@ -379,8 +379,8 @@ export default class Map extends Component {
                   </div>
                   <div
                     style={{
-                      borderBottom: "1px solid #dee2e6",
-                      padding: "1rem 1rem",
+                      borderBottom: '1px solid #dee2e6',
+                      padding: '1rem 1rem',
                     }}
                   >
                     {this.state.marks[this.state.currentRestaurant] &&
@@ -389,34 +389,34 @@ export default class Map extends Component {
                         this.state.currentRestaurant
                       ].comments.map((comment, i) => {
                         return (
-                          <div class="media">
+                          <div className="media" key={i}>
                             <svg
                               width="1em"
                               height="1em"
                               viewBox="0 0 16 16"
-                              class="bi bi-person-fill"
+                              className="bi bi-person-fill"
                               fill="currentColor"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
                               ></path>
                             </svg>
-                            <div class="media-body">
-                              <h6 class="mt-0">{comment.username}</h6>
+                            <div className="media-body">
+                              <h6 className="mt-0">{comment.username}</h6>
                               {comment.commentBody}
                             </div>
                           </div>
-                        );
+                        )
                       })}
                   </div>
-                  <div class="modal-body">
+                  <div className="modal-body">
                     <form onSubmit={(e) => this.onSubmitComment(e)}>
-                      <div class="form-group">
+                      <div className="form-group">
                         <textarea
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="commentBody"
                           name="commentBody"
                           placeholder="Your opinion"
@@ -424,16 +424,16 @@ export default class Map extends Component {
                           onChange={(e) => this.onChangeComment(e)}
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary">
+                      <button type="submit" className="btn btn-primary">
                         Submit
                       </button>
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div className="modal-footer">
                     <button
                       onClick={this.closeCommentModal}
                       type="button"
-                      class="btn btn-secondary"
+                      className="btn btn-secondary"
                       data-dismiss="modal"
                     >
                       Close
@@ -447,11 +447,11 @@ export default class Map extends Component {
             .filter((mark) =>
               this.state.filterRating
                 ? Math.floor(mark.rating) == this.state.filterRating
-                : true
+                : true,
             )
             .map((mark, index) => {
               return (
-                <div class="media text-muted pt-3">
+                <div className="media text-muted pt-3" key={index}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="48"
@@ -462,8 +462,10 @@ export default class Map extends Component {
                       fill="#111"
                     />
                   </svg>
-                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">{mark.name}</strong>
+                  <div className="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong className="d-block text-gray-dark">
+                      {mark.name}
+                    </strong>
                     <p>{mark.description}</p>
                     Latitude: {mark.lat}
                     <span> </span>
@@ -476,32 +478,32 @@ export default class Map extends Component {
                     <span> </span>
                     <button
                       onClick={() => {
-                        this.openCommentModal();
-                        this.setCurrentRestaurant(index);
+                        this.openCommentModal()
+                        this.setCurrentRestaurant(index)
                       }}
                       type="button"
-                      class="btn btn-outline-primary"
+                      className="btn btn-outline-primary"
                     >
                       <svg
                         width="1em"
                         height="1em"
                         viewBox="0 0 16 16"
-                        class="bi bi-chat-left-dots-fill"
+                        className="bi bi-chat-left-dots-fill"
                         fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
                         ></path>
                       </svg>
                     </button>
-                  </p>
+                  </div>
                 </div>
-              );
+              )
             })}
         </div>
       </div>
-    );
+    )
   }
 }
