@@ -59,19 +59,21 @@ export default class Map extends Component {
   }
   componentDidMount() {
     Modal.setAppElement(document.getElementById('root'))
-    this.getData()
+
     //console.log('Daaataaa', resto.resto)
     this.setState({
       marks: resto.resto,
     })
     navigator.geolocation.getCurrentPosition((position) => {
-      //console.log(position.coords.la)
+      console.log(position.coords)
       this.setState({
         userlocation: {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         },
       })
+      console.log(this.state.userlocation)
+      this.getData()
     })
   }
 
@@ -100,7 +102,7 @@ export default class Map extends Component {
           }
         })
         this.setState({
-          marks: [...this.state.marks, newData],
+          marks: this.state.marks.concat(newData),
         })
         console.log('State', this.state.marks)
       })
@@ -190,26 +192,65 @@ export default class Map extends Component {
         <div style={{ height: '100vh', width: '75%', overflowX: 'hidden' }}>
           <GoogleMap
             onClick={({ x, y, lat, lng, event }) => {
-              Swal.fire('Lat: ' + lat + ' ,Lng: ' + lng)
-              let markerData = {
-                name: '',
-                lat: lat,
-                lng: lng,
-                description: '',
-                rating: 0,
-                comments: [],
-              }
-              const newMarks = [...this.state.marks, { ...markerData }]
-              this.setState({
-                marks: newMarks,
-                formData: '',
+              // Swal.fire('Lat: ' + lat + ' ,Lng: ' + lng)
+              Swal.mixin({
+                input: 'text',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: true,
+                progressSteps: ['1', '2'],
               })
+                .queue([
+                  {
+                    title: 'Name ',
+                    text: 'Add a name',
+                  },
+                  {
+                    title: 'Description',
+                    text: 'Add A description',
+                  },
+                ])
+                .then((result) => {
+                  if (result.value) {
+                    console.log(result.value)
+                    const answers = JSON.stringify(result.value)
+                    let markerData = {
+                      name: result.value[0],
+                      lat: lat,
+                      lng: lng,
+                      description: result.value[1],
+                      rating: 0,
+                      comments: [],
+                    }
+                    const newMarks = [...this.state.marks, { ...markerData }]
+                    this.setState({
+                      marks: newMarks,
+                      formData: '',
+                    })
+                    Swal.fire({
+                      title: 'All done!',
+                      html: `
+                      New Restaurant:
+
+                      <pre><h5>Name: ${markerData.name}</h5> <br>
+                      <h5>Description: ${markerData.description}</h5> <br>
+                      <h5>Lat: ${markerData.lat}</h5> <br>
+                      <h5>Lng: ${markerData.lng}</h5> <br>
+                      </pre>
+                    `,
+                      confirmButtonText: 'Ok!',
+                    })
+                  }
+                })
+
               //setMarks(newMarks)
             }}
             bootstrapURLKeys={{
               key: 'AIzaSyAMDtC9Z6uMrTV_NsWjjdeskdGE5W-hITY',
             }}
-            defaultCenter={{ lat: 33.8869, lng: 9.5375 }}
+            center={{
+              lat: this.state.defaultPosition.lat,
+              lng: this.state.defaultPosition.lng,
+            }}
             defaultZoom={10}
           >
             {this.state.marks.map((mark, index) => {
@@ -237,11 +278,9 @@ export default class Map extends Component {
                 <button
                   onClick={() => {
                     this.setState({
-                      defaultPosition: {
-                        lat: this.state.userlocation.lat,
-                        lng: this.state.userlocation.lng,
-                      },
+                      defaultPosition: this.state.userlocation,
                     })
+                    console.log(this.state.defaultPosition)
                   }}
                   className="btn btn-primary"
                 >
@@ -340,7 +379,7 @@ export default class Map extends Component {
                           onChange={(e) => this.onChangeRating(e)}
                         />
                       </div>
-                      <button type="submit" class="btn btn-primary">
+                      <button type="submit" className="btn btn-primary">
                         Submit
                       </button>
                     </form>
