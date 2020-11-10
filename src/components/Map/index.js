@@ -91,14 +91,27 @@ export default class Map extends Component {
       .then((res) => {
         let data = res.data.results
         let newData = data.map((elm) => {
-          console.log(elm)
-          return {
-            name: elm.name,
-            lat: elm.geometry.location.lat,
-            lng: elm.geometry.location.lng,
-            description: '',
-            rating: 0,
-            comments: [],
+          //console.log(elm.photos[0])
+          if (elm.photos != undefined && elm.photos[0]) {
+            return {
+              name: elm.name,
+              photos: elm.photos[0].html_attributions,
+              lat: elm.geometry.location.lat,
+              lng: elm.geometry.location.lng,
+              description: '',
+              rating: 0,
+              comments: [],
+            }
+          } else {
+            return {
+              name: elm.name,
+
+              lat: elm.geometry.location.lat,
+              lng: elm.geometry.location.lng,
+              description: '',
+              rating: 0,
+              comments: [],
+            }
           }
         })
         this.setState({
@@ -254,13 +267,23 @@ export default class Map extends Component {
             defaultZoom={10}
           >
             {this.state.marks.map((mark, index) => {
-              return (
+              return mark.photos != undefined ? (
                 <Mark
                   key={index}
                   name={mark.name}
                   description={mark.description}
                   lat={mark.lat}
                   lng={mark.lng}
+                  photos={mark.photos}
+                ></Mark>
+              ) : (
+                <Mark
+                  key={index}
+                  name={mark.name}
+                  description={mark.description}
+                  lat={mark.lat}
+                  lng={mark.lng}
+                  photos={` <a href="https://placeholder.com"><img src="https://via.placeholder.com/250"></a>`}
                 ></Mark>
               )
             })}
